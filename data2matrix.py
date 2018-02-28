@@ -9,22 +9,29 @@ import numpy as np
 import pandas as pd
 
 def data2matrix():
-    read = pd.read_csv('PRSA_data.csv').as_matrix()
-    for i in range (43824):
-        temp = read[i,9]
-        if temp == 'NE':
-            read[i,9] = 1
-        elif temp == 'SE':
-            read[i,9] = 2
-        elif temp == 'NW':
-            read[i,9] = 4
-        elif temp == 'cv':
-            read[i,9] = 0
-        del temp, i
-    #df = pd.DataFrame(read)
-    data = np.matrix(read) 
+    read = pd.read_csv('PRSA_data.csv')#.as_matrix()
+    #shift tomorrow's pm2.5 data into today's ros
+    df = read.dropna(how='any')
+    #romve data not at 8am
+    df = df[df.hour == 8]
+    #shift tomorrow's pm2.5 data into today's row
+    read['pm2.5'] = read['pm2.5'].shift(-1)
+    #produce an numpy array
+    data = np.matrix(df) 
+    N = len(data)
+    for i in range (N ):
+        if data[i,9] == 'NE':
+            data[i,9] = 1
+        elif data[i,9] == 'SE':
+            data[i,9] = 2
+        elif data[i,9] == 'NW':
+            data[i,9] = 4
+        elif data[i,9] == 'cv':
+            data[i,9] = 0
+            
+    del N, df,i,read
     return data
-
+    
 if __name__ == '__main__':
     data2matrix()
     

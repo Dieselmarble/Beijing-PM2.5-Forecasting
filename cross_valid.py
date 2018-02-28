@@ -14,14 +14,12 @@ def cross_valid(train):
     #number of folds 
     #10 folds, each group has 3505 rows of test data(refleted in test_idx)
     #(K-1)N/K = 31554 training points 
-    kf = KFold(n_splits = 10, shuffle = True, random_state=None)
+    kf = KFold(n_splits = 10, shuffle = False, random_state=None)
     #Return the number of splitting iterations in the cross-validator 
     #kf.get_n_splits(train)
     fold = 0
     X_train = []
     X_test = []
-
-    
     for train_idx, test_idx in kf.split(train):
         fold += 1
         X_train.append(train_idx)
@@ -34,6 +32,7 @@ def cross_valid(train):
         #print("score for fold %d: %.3f" %(fold, score))
         #return score
     return X_train, X_test
+
 if __name__ == '__main__':
     cross_valid(train)
     
