@@ -26,8 +26,8 @@ def remove_zero(array):
         if array[0,i]==0:
             array[0,i]=1
     return array
+
 if __name__ == '__main__':
-    
     normalise(train, test)
     
 

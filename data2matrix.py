@@ -14,6 +14,9 @@ def data2matrix():
     df = read.dropna(how='any')
     #romve data not at 8am
     df = df[df.hour == 8]
+    #remove indexing in features 
+    df = df.drop(['No'], axis=1)
+    p = 8
     #shift tomorrow's pm2.5 data into today's row
     read['pm2.5'] = read['pm2.5'].shift(-1)
     # to change use .astype() 
@@ -21,15 +24,15 @@ def data2matrix():
     
     data = np.matrix(df) 
     N = len(data)
-    for i in range (N ):
-        if data[i,9] == 'NE':
-            data[i,9] = 1
-        elif data[i,9] == 'SE':
-            data[i,9] = 2
-        elif data[i,9] == 'NW':
-            data[i,9] = 4
-        elif data[i,9] == 'cv':
-            data[i,9] = 0
+    for i in range (N):
+        if data[i,p] == 'NE':
+            data[i,p] = 1
+        elif data[i,p] == 'SE':
+            data[i,p] = 2
+        elif data[i,p] == 'NW':
+            data[i,p] = 4
+        elif data[i,p] == 'cv':
+            data[i,p] = 0
     data = data.astype(float)        
             
     del N, df,i,read

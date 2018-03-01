@@ -13,22 +13,25 @@ read = pd.read_csv('PRSA_data.csv')#.as_matrix()
 df = read.dropna(how='any')
 #romve data not at 8am
 df = df[df.hour == 8]
+df = df.drop(['No'], axis = 1)
 #shift tomorrow's pm2.5 data into today's row
 read['pm2.5'] = read['pm2.5'].shift(-1)
 # to change use .astype() 
 #produce an numpy array
-
 data = np.matrix(df) 
+
 N = len(data)
-for i in range (N ):
-    if data[i,9] == 'NE':
-        data[i,9] = 1
-    elif data[i,9] == 'SE':
-        data[i,9] = 2
-    elif data[i,9] == 'NW':
-        data[i,9] = 4
-    elif data[i,9] == 'cv':
-        data[i,9] = 0
+i=0;
+for i in range (N):
+    if data[i,8] == 'NE':
+        data[i,8] = 1
+    elif data[i,8] == 'SE':
+        data[i,8] = 2
+    elif data[i,8] == 'NW':
+        data[i,8] = 4
+    elif data[i,8] == 'cv':
+        data[i,8] = 0
+        
 ddf = data.astype(float)        
         
 #del N, df,i,read
