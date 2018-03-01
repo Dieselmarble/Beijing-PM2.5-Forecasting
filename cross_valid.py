@@ -9,8 +9,8 @@ import numpy as np
 
 from sklearn.model_selection import KFold
 def cross_valid(train):
-    X = train
-    n = len(X)
+
+    n = len(train)
     #number of folds 
     #10 folds, each group has 3505 rows of test data(refleted in test_idx)
     #(K-1)N/K = 31554 training points 
@@ -20,19 +20,18 @@ def cross_valid(train):
     fold = 0
     X_train = []
     X_test = []
+    y_train = []
+    y_test = []
     for train_idx, test_idx in kf.split(train):
         fold += 1
         X_train.append(train_idx)
         X_test.append(test_idx)
+        y_train.append(train_idx)
+        y_test.append(test_idx)
         
-        #train your data
-        #clf = LogisticRegression().fit(X_train, X_train(test))
-        #test your data
-        #score = clf.score(X_test, Y_test)
-        #print("score for fold %d: %.3f" %(fold, score))
-        #return score
-    return X_train, X_test
-
+    del fold, n, 
+    return X_train, X_test, y_train, y_test
+    
 if __name__ == '__main__':
     cross_valid(train)
     
