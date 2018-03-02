@@ -27,13 +27,34 @@ X_train_scaled, X_test_scaled = normalise(X_train, X_test)
 #new_mean = train_scaled.mean()
 #new_std = train_scaled.std()
 
-#Cross validation splitter
-(X_train_set,X_valid,y_train_set,y_valid) = cross_valid(X_train_scaled)
-
 #PM2.5 for training
-PM25_train = y_train
+#PM25_train = y_train
+errors=[]
+i = 0;
+mse = 0;
+lists = [ 0, 1e-5, 1e-8, 0.1, 1, 10, 100, 1000] 
+for a in lists:
+    #Do ridge regression return coefficients and error 
+    #coef, mse_train = ridge(X_train_scaled, y_train, a)
+    #Cross validation splitter
+    temp = mse
+    mse = cross_valid(X_train_scaled,y_train, a)
+    #mse = np.asscalar(mse)
+    mse = float(mse[0])
+    if mse <= temp:
+        mini = mse
+        index = i
+    i += 1    
+    errors.append(mse)
+    
+val = lists[index]
+ 
+print('alpha value %d has lowest error of %d' %(val, mini))
+del errors, i, val, mini 
 
-#Do ridge regression return coefficients and error 
-coef,mse_train = ridge(X_train_scaled, PM25_train)
 
-del data, X_train, X_test, y_train
+    
+
+
+
+# sdel  X_train, X_test, y_train

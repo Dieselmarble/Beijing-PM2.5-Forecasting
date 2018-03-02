@@ -12,10 +12,10 @@ read = pd.read_csv('PRSA_data.csv')#.as_matrix()
 #shift tomorrow's pm2.5 data into today's ros
 df = read.dropna(how='any')
 #romve data not at 8am
-df = df[df.hour == 8]
+#df = df[df.hour == 8]
 df = df.drop(['No'], axis = 1)
 #shift tomorrow's pm2.5 data into today's row
-read['pm2.5'] = read['pm2.5'].shift(-1)
+df['pm2.5'] = df['pm2.5'].shift(-1)
 # to change use .astype() 
 #produce an numpy array
 data = np.matrix(df) 

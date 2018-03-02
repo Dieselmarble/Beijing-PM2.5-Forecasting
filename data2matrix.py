@@ -10,18 +10,25 @@ import pandas as pd
 
 def data2matrix():
     read = pd.read_csv('PRSA_data.csv')#.as_matrix()
-    #shift tomorrow's pm2.5 data into today's ros
+    #shift tomorrow's pm2.5 data into today's row
+        
+    read['pm2.5'] = read['pm2.5'].shift(-24)
+    
     df = read.dropna(how='any')
-    #romve data not at 8am
-    df = df[df.hour == 8]
+   
     #remove indexing in features 
     df = df.drop(['No'], axis=1)
-    p = 8
-    #shift tomorrow's pm2.5 data into today's row
-    read['pm2.5'] = read['pm2.5'].shift(-1)
-    # to change use .astype() 
-    #produce an numpy array
+    df = df.drop(['year'], axis=1)
     
+    #Wind direction is on column 8 
+    p = 7
+   
+    #df2 = df.copy()
+    #romve data not at 8am
+    #df2 = df2[df2.hour == 8]
+    #data2 = np,matrix(df2)
+    
+    #produce an numpy array
     data = np.matrix(df) 
     N = len(data)
     for i in range (N):
@@ -33,9 +40,12 @@ def data2matrix():
             data[i,p] = 4
         elif data[i,p] == 'cv':
             data[i,p] = 0
-    data = data.astype(float)        
-            
-    del N, df,i,read
+    
+    # to change use .astype()      
+    data = data.astype(float)
+    #data2 = data2.astype(float)         
+           
+    del N, df, i, read
     
     return data
     
