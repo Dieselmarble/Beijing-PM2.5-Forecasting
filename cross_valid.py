@@ -11,9 +11,10 @@ from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
 from ridge_regression import ridge
 from lasso_regression import lasso
+from elastic_regression import elastic
 
 
-def cross_valid(feature, y, a, name):
+def cross_valid(feature, y, a, name, l1):
 
     #number of folds 
     #10 folds, each group has 3505 rows of test data(refleted in test_idx)
@@ -26,8 +27,7 @@ def cross_valid(feature, y, a, name):
     X_test = []
     y_train = []
     y_test = []
-    e = 0;
-    
+    previous_mse = 0;
     for train_idx, test_idx in kf.split(feature):  
         fold += 1
         X_train = feature[train_idx]
@@ -38,22 +38,24 @@ def cross_valid(feature, y, a, name):
             coef, mse_train = ridge(X_train, y_train, a)
         if name == 'Lasso':
             coef, mse_train = lasso(X_train, y_train, a)
-        
+        if name == 'Elastic':
+            coef, mse_train = elastic(X_train, y_train, a, l1)
         y_predict = np.dot(X_test,np.transpose(coef))
         #error of each validation set
         error = y_test - y_predict
-        #accumalated error
         error = np.resize(error,(3341,1))
-        e = e + error
-              
-           
-    #Calculate Mean Squared Error    
-    mse = np.dot(np.transpose(e),e)/len(X_test)
+        #sum all errors squared
+        sum_square_error = np.dot(np.transpose(error),error)
+        #each validation error(MSE)
+        mse = sum_square_error/len(y_test)
+        mse = mse + previous_mse
+        previous_mse = mse
+
     #Then divided by number of folds getting Cross-validation error 
-    mse = mse/fold
-    del fold
-    return mse
+    cv_error = mse/fold
+
+    return cv_error
     
 if __name__ == '__main__':
-    cross_valid(feature, y, a, name)
+    cross_valid(feature, y, a, name, l1)
     

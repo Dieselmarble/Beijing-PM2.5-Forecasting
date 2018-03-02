@@ -18,10 +18,10 @@ def data2matrix():
    
     #remove indexing in features 
     df = df.drop(['No'], axis=1)
-    df = df.drop(['year'], axis=1)
+    #df = df.drop(['year'], axis=1)
     
     #Wind direction is on column 8 
-    p = 7
+    p = 8
    
     #df2 = df.copy()
     #romve data not at 8am

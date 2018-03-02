@@ -43,7 +43,7 @@ for train_idx, test_idx in kf.split(X_train_scaled):
     y_train1 = y[train_idx]
     X_test1 = X_train_scaled[test_idx]
     y_test1 = y[test_idx]
-    coef, mse_train = ridge(X_train1, y_train1)
+    coef, mse_train = ridge(X_train1, y_train1,100)
     y_predict = np.dot(X_test1,np.transpose(coef))
     error = y_test1 - y_predict
     error = np.resize(error,shape)
