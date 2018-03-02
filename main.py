@@ -38,7 +38,7 @@ for a in lists:
     #coef, mse_train = ridge(X_train_scaled, y_train, a)
     #Cross validation splitter
     temp = mse
-    mse = cross_valid(X_train_scaled,y_train, a)
+    mse = cross_valid(X_train_scaled,y_train, a, 'Lasso')
     #mse = np.asscalar(mse)
     mse = float(mse[0])
     if mse <= temp:
@@ -53,8 +53,6 @@ print('alpha value %d has lowest error of %d' %(val, mini))
 del errors, i, val, mini 
 
 
-    
 
 
-
-# sdel  X_train, X_test, y_train
+# del  X_train, X_test, y_train

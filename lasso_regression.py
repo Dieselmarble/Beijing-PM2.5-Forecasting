@@ -1,33 +1,26 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Mar  1 13:26:27 2018
+Created on Fri Mar  2 19:38:24 2018
 
 @author: kevin
 """
 
-from sklearn.linear_model import Ridge
+from sklearn.linear_model import Lasso
 import numpy as np
 
-def ridge(x,y,a):  
+def lasso(x,y,a):  
 
-    clf = Ridge(alpha = a)
+    clf = Lasso(alpha = a)
     clf.fit(x, y)
-    
     coefs = clf.coef_
-    
     predict = clf.predict(x)
-    #training error
     e = predict - y
-    
     #total_error = np.dot(np.transpose(e),e)
     #mse_train = total_error/len(predict)
-     
     return coefs, e
 
 if __name__ == '__main__':
-    ridge(x, y, a)    
+    lasso(x, y, a)    
 
-    
 
-    
