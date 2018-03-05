@@ -9,28 +9,28 @@ import numpy as np
 import pandas as pd
 
 def data2matrix():
-    read = pd.read_csv('PRSA_data.csv')#.as_matrix()
+    df2 = pd.read_csv('PRSA_data.csv')#.as_matrix()
+    df = df2.copy()
+    #use previous pm2.5 as an explicit feature
+    df['pm_today'] = df2['pm2.5']
     #shift tomorrow's pm2.5 data into today's row
-        
-    read['pm2.5'] = read['pm2.5'].shift(-24)
-    
-    df = read.dropna(how='any')
-   
+    #df['pm2.5'] = df['pm2.5'].shift(-24) 
     #remove indexing in features 
     df = df.drop(['No'], axis=1)
-    #df = df.drop(['year'], axis=1)
+    #remove year in features
+    df = df.drop(['year'], axis=1)
+    df = df.dropna(how='any')
     
-    #Wind direction is on column 8 
-    p = 8
-   
-    #df2 = df.copy()
-    #romve data not at 8am
-    #df2 = df2[df2.hour == 8]
-    #data2 = np,matrix(df2)
+    time = np.array(range(9,24))
+    for j in range(len(time)):
+        #romve data not at 8am
+        df = df[df.hour != time[j]] 
     
     #produce an numpy array
     data = np.matrix(df) 
     N = len(data)
+    #Wind direction is on column 8 
+    p = 7
     for i in range (N):
         if data[i,p] == 'NE':
             data[i,p] = 1
@@ -43,9 +43,9 @@ def data2matrix():
     
     # to change use .astype()      
     data = data.astype(float)
-    #data2 = data2.astype(float)         
+    #data2 = data2.astype(float)          
            
-    del N, df, i, read
+    del N, df, df2, i
     
     return data
     

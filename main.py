@@ -9,7 +9,7 @@ Created on Mon Feb 26 13:11:24 2018
 import numpy as np
 
 from sklearn import preprocessing
-#from data2matrix import data
+import matplotlib.pyplot as plt
 from data2matrix import data2matrix
 from cross_valid import cross_valid
 from normalise import normalise
@@ -33,51 +33,40 @@ errors=[]
 i = 0;
 index = 0;
 mse = 0;
-mini = 0;
-lists = [ 0.1, 1, 10, 100, 1000, 10000] 
-for a in lists:
+#alphas = [ 1e-6, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 0.1, 1, 10, 100]
+alphas = np.logspace(-8, 8, 250)
+for a in alphas:
     #Do ridge regression return coefficients and error 
     #coef, mse_train = ridge(X_train_scaled, y_train, a)
     #Cross validation splitter
-    temp = mse
-    mse = cross_valid(X_train_scaled,y_train, a, 'Ridge', 0)
+    mse = cross_valid(X_train_scaled,y_train, a, 'Ridge', 0.5)
     #mse = np.asscalar(mse)
-    mse = float(mse[0])
-    if mse <= temp:
-        mini = mse
-        index = i
-    i += 1    
+    mse = float(mse[0]) 
     errors.append(mse)
+#search for loweest error and correspondsing alpha
+mini = errors[0]
+for i in range(len(errors)):
+    if errors[i] <= mini:
+        mini = errors[i]
+        index = i
+    i += 1 
     
-val = lists[index]
+val = alphas[index]
  
 print('alpha value %d has lowest error of %d' %(val, mini))
 #del  i,a, val, mini, mse, temp
 
-
-mini = 0;
-mse =0 ;
-i = 0;
-errors2=[]
-
-l1 = 0.06
-for a in lists:
-    #Do ridge regression return coefficients and error 
-    #coef, mse_train = ridge(X_train_scaled, y_train, a)
-    #Cross validation splitter
-    temp = mse
-    mse = cross_valid(X_train_scaled,y_train, a, 'Elastic', l1)
-    #mse = np.asscalar(mse)
-    mse = float(mse[0])
-    if mse <= temp:
-        mini = mse
-        index = i
-    i += 1    
-    errors2.append(mse)
-    
-val = lists[index]
- 
-print('Elastic: alpha value %d has lowest error of %d' %(val, mini))
+#Plot error against alpha
+plt.subplot(121)
+ax = plt.gca()
+ax.plot(alphas, errors)
+ax.set_xscale('log')
+plt.xlabel('alpha')
+plt.ylabel('mean squared error')
+plt.title('CV error versus the regularization')
+plt.axis('tight')
+#plt.xlim((0,50))
+plt.show()
 
 
-# del  X_train, X_test, y_train
+del  X_train, X_test, y_train, i, val, a

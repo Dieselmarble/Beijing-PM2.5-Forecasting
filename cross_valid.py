@@ -35,14 +35,15 @@ def cross_valid(feature, y, a, name, l1):
         X_test = feature[test_idx]
         y_test = y[test_idx]
         if name == 'Ridge':
-            coef, mse_train = ridge(X_train, y_train, a)
+            coef = ridge(X_train, y_train, a)
         if name == 'Lasso':
-            coef, mse_train = lasso(X_train, y_train, a)
+            coef = lasso(X_train, y_train, a)
         if name == 'Elastic':
-            coef, mse_train = elastic(X_train, y_train, a, l1)
+            coef = elastic(X_train, y_train, a, l1)
         y_predict = np.dot(X_test,np.transpose(coef))
         #error of each validation set
         error = y_test - y_predict
+        #error = np.resize(error,(139,1))
         error = np.resize(error,(3341,1))
         #sum all errors squared
         sum_square_error = np.dot(np.transpose(error),error)

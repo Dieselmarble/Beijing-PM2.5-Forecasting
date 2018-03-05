@@ -1,57 +1,35 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """
-Created on Thu Mar  1 17:50:46 2018
+Created on Thu Mar  1 15:48:33 2018
 
 @author: kevin
 """
 
+from sklearn.model_selection import train_test_split
 import numpy as np
 
-from sklearn.model_selection import KFold
-from sklearn.model_selection import cross_val_score
-from ridge_regression import ridge
 from data2matrix import data2matrix
-from set_split import split
-from normalise import normalise
-
 
 data = data2matrix()
-
-X_train, X_test, y_train, y_test = split(data)
-#nomalise test set with the mean and std from training set
-X_train_scaled, X_test_scaled = normalise(X_train, X_test)
-#Return the number of splitting iterations in the cross-validator 
-#kf.get_n_splits(train)
-fold = 0
-X_train1 = []
-X_test1 = []
-y_train1 = []
-y_test1 = []
-e = 0;
-
-#number of folds 
-#10 folds, each group has 3505 rows of test data(refleted in test_idx)
-#(K-1)N/K = 31554 training points 
-kf = KFold(n_splits = 10, shuffle = False, random_state=None)
-y = y_train
-
-for train_idx, test_idx in kf.split(X_train_scaled):
-    fold += 1
-    
-    X_train1 = X_train_scaled[train_idx]
-    y_train1 = y[train_idx]
-    X_test1 = X_train_scaled[test_idx]
-    y_test1 = y[test_idx]
-    coef, mse_train = ridge(X_train1, y_train1,100)
-    y_predict = np.dot(X_test1,np.transpose(coef))
-    error = y_test1 - y_predict
-    error = np.resize(error,shape)
-    e = e + error
-    
-mse = np.dot(np.transpose(e),e)/len(X_test)
-
-#del fold
+#split data into training and test set
+#have deleted year column
+#X = data[:,[0,1,2,4,5,6,7,8,9,10,11]]
+#PM25 to be predicted is on column 3
+#y = data[:,3]
+i = 16
+new = data[16,:]
+X = np.matrix
+y = np.matrix
+for i in range(len(data)-8):
+    if data[i,2] == 8:
+        for j in range(9,17): 
+            day_p = data[i-j,:]
+            new = np.concatenate((new,day_p),axis=0)
+        X.(new)
+        new = data[i+8,:]
+        y.append(data[i,3])
+        index = index + 1 
 
 
-
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) 
