@@ -13,9 +13,8 @@ import matplotlib.pyplot as plt
 from data2matrix import data2matrix
 from cross_valid import cross_valid
 from normalise import normalise
-
 from set_split import split
-
+from test_error import testing
 #import data from csv file to a matirx
 data = data2matrix()
 
@@ -33,16 +32,18 @@ errors=[]
 i = 0;
 index = 0;
 mse = 0;
+
 #alphas = [ 1e-6, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 0.1, 1, 10, 100]
 alphas = np.logspace(-8, 8, 250)
 for a in alphas:
     #Do ridge regression return coefficients and error 
     #coef, mse_train = ridge(X_train_scaled, y_train, a)
     #Cross validation splitter
-    mse = cross_valid(X_train_scaled,y_train, a, 'Ridge', 0.5)
+    mse = cross_valid(X_train_scaled,y_train, 'Ridge', a, 0.5)
     #mse = np.asscalar(mse)
     mse = float(mse[0]) 
     errors.append(mse)
+    
 #search for loweest error and correspondsing alpha
 mini = errors[0]
 for i in range(len(errors)):
@@ -51,9 +52,9 @@ for i in range(len(errors)):
         index = i
     i += 1 
     
-val = alphas[index]
+opt_a = alphas[index]
  
-print('alpha value %d has lowest error of %d' %(val, mini))
+print('alpha value %d has lowest error of %d' %(opt_a, mini))
 #del  i,a, val, mini, mse, temp
 
 #Plot error against alpha
@@ -68,5 +69,6 @@ plt.axis('tight')
 #plt.xlim((0,50))
 plt.show()
 
-
-del  X_train, X_test, y_train, i, val, a
+test_e = testing(X_train_scaled,y_train,X_test_scaled,y_test)
+print('testing error is %d' %test_e)
+del i,  a, error, index, mse

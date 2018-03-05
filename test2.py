@@ -17,19 +17,16 @@ data = data2matrix()
 #X = data[:,[0,1,2,4,5,6,7,8,9,10,11]]
 #PM25 to be predicted is on column 3
 #y = data[:,3]
-i = 16
-new = data[16,:]
-X = np.matrix
-y = np.matrix
-for i in range(len(data)-8):
+X = np.zeros([1738,108])
+y = []
+index = 0;
+for i in range(32,len(data)):
     if data[i,2] == 8:
-        for j in range(9,17): 
-            day_p = data[i-j,:]
-            new = np.concatenate((new,day_p),axis=0)
-        X.(new)
-        new = data[i+8,:]
+        for j in range(24,32):
+            #X.append(data[i-j,:])
+            X[index,j]
         y.append(data[i,3])
-        index = index + 1 
-
-
+        index += 1 
+    i += 1
+y = np.asarray(y)
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) 

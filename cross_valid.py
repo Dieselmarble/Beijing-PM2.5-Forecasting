@@ -19,7 +19,7 @@ def cross_valid(feature, y, a, name, l1):
     #number of folds 
     #10 folds, each group has 3505 rows of test data(refleted in test_idx)
     #(K-1)N/K = 31554 training points 
-    kf = KFold(n_splits = 10, shuffle = True, random_state=None)
+    kf = KFold(n_splits = 10, shuffle = False, random_state=None)
     #Return the number of splitting iterations in the cross-validator 
     #kf.get_n_splits(train)
     fold = 0
@@ -40,6 +40,7 @@ def cross_valid(feature, y, a, name, l1):
             coef = lasso(X_train, y_train, a)
         if name == 'Elastic':
             coef = elastic(X_train, y_train, a, l1)
+            
         y_predict = np.dot(X_test,np.transpose(coef))
         #error of each validation set
         error = y_test - y_predict
@@ -58,5 +59,5 @@ def cross_valid(feature, y, a, name, l1):
     return cv_error
     
 if __name__ == '__main__':
-    cross_valid(feature, y, a, name, l1)
+    cross_valid(feature, y, name, a, l1)
     
