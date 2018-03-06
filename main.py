@@ -15,11 +15,14 @@ from cross_valid import cross_valid
 from normalise import normalise
 from set_split import split
 from test_error import testing
+
+
 #import data from csv file to a matirx
 data = data2matrix()
 
 X_train, X_test, y_train, y_test = split(data)
-
+y_train = np.ravel(y_train)
+y_test = np.ravel(y_test)
 #nomalise test set with the mean and std from training set
 X_train_scaled, X_test_scaled = normalise(X_train, X_test)
 #to exam
@@ -36,12 +39,9 @@ mse = 0;
 #alphas = [ 1e-6, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 0.1, 1, 10, 100]
 alphas = np.logspace(-8, 8, 250)
 for a in alphas:
-    #Do ridge regression return coefficients and error 
-    #coef, mse_train = ridge(X_train_scaled, y_train, a)
     #Cross validation splitter
-    mse = cross_valid(X_train_scaled,y_train, 'Ridge', a, 0.5)
-    #mse = np.asscalar(mse)
-    mse = float(mse[0]) 
+    mse = cross_valid(X_train_scaled, y_train, 'Lasso', a, 0.5)
+    #mse = float(mse[0]) 
     errors.append(mse)
     
 #search for loweest error and correspondsing alpha
@@ -66,9 +66,14 @@ plt.xlabel('alpha')
 plt.ylabel('mean squared error')
 plt.title('CV error versus the regularization')
 plt.axis('tight')
-#plt.xlim((0,50))
 plt.show()
+'''
 
-test_e = testing(X_train_scaled,y_train,X_test_scaled,y_test)
+test_e = testing(X_train_scaled,y_train,X_test_scaled,y_test,'Lasso',1, 0.5, 'linear')
+
 print('testing error is %d' %test_e)
-del i,  a, error, index, mse
+ 
+
+
+del i, index, mse
+'''

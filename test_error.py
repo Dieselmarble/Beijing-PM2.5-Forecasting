@@ -5,26 +5,27 @@ Created on Mon Mar  5 22:01:48 2018
 
 @author: kevin
 """
-from ridge_regression import ridge
-from lasso_regression import lasso
-from elastic_regression import elastic
+from sklearn.metrics import mean_squared_error
 import numpy as np
+from sklearn.svm import SVR
+from sklearn.linear_model import ElasticNet
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import Ridge
 
-def testing(X_train,y_train,X_test,y_test,name,a,l1 ):
+def testing(X_train,y_train,X_test,y_test,name,a,l1,kernel_n):
     if name == 'Ridge':
-        coef = ridge(X_train, y_train, opt_a)
+        clf = Ridge(alpha = a)
     if name == 'Lasso':
-        coef = lasso(X_train, y_train, opt_a)
-    if name=='elastic':
-        coef = elastic(X_train, y_train, opt_a, l1)
-
-    y_predict = np.dot(X_test,np.transpose(coef))
-    error = y_test - y_predict
-    sum_square_error = np.dot(np.transpose(error),error)
-    test_error = sum_square_error/len(error)
-    test_error = float(test_error[0])
-    return test_error
-
+        clf = Lasso(alpha = a)
+    if name =='elastic':
+        clf = ElasticNet(alpha = a, l1_ratio = l1 ,random_state=0)
+    if name == 'SVM':
+        clf = SVR(C=1.0, epsilon=0.2, kernel=kernel_n )
+    clf.fit(X_train,y_train)
+    y_predict = clf.predict(X_test)
+    #y_predict = np.ravel(y_predict)
+    error = mean_squared_error(y_test, y_predict)
+    return error
 
 if __name__ == '__main__':
-    testing(X_train,y_train,X_test,y_test,name,a,l1 )
+    testing(X_train,y_train,X_test,y_test,name,a,l1,kernel_n )

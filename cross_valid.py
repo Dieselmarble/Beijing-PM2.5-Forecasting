@@ -9,12 +9,14 @@ import numpy as np
 
 from sklearn.model_selection import KFold
 from sklearn.model_selection import cross_val_score
-from ridge_regression import ridge
-from lasso_regression import lasso
-from elastic_regression import elastic
+from sklearn.svm import SVR
+from sklearn.linear_model import ElasticNet
+from sklearn.linear_model import Lasso
+from sklearn.linear_model import Ridge
+from sklearn.metrics import mean_squared_error
 
 
-def cross_valid(feature, y, a, name, l1):
+def cross_valid(feature, y, name, a, l1):
 
     #number of folds 
     #10 folds, each group has 3505 rows of test data(refleted in test_idx)
@@ -34,22 +36,28 @@ def cross_valid(feature, y, a, name, l1):
         y_train = y[train_idx]
         X_test = feature[test_idx]
         y_test = y[test_idx]
+       
         if name == 'Ridge':
-            coef = ridge(X_train, y_train, a)
+            clf = Ridge(alpha = a)
         if name == 'Lasso':
-            coef = lasso(X_train, y_train, a)
-        if name == 'Elastic':
-            coef = elastic(X_train, y_train, a, l1)
-            
-        y_predict = np.dot(X_test,np.transpose(coef))
+            clf = Lasso(alpha = a)
+        if name =='elastic':
+            clf = ElasticNet(alpha = a, l1_ratio = l1 ,random_state=0)
+        if name == 'SVM':
+            clf = SVR(C=1.0, epsilon=0.2, kernel=kernel_n )
+        
+        clf.fit(X_train,y_train)
+        y_predict = clf.predict(X_test)   
+        mse = mean_squared_error(y_test, y_predict)
+    
         #error of each validation set
-        error = y_test - y_predict
+        #error = y_test - y_predict
         #error = np.resize(error,(139,1))
-        error = np.resize(error,(3341,1))
+        #error = np.resize(error,(3341,1))
         #sum all errors squared
-        sum_square_error = np.dot(np.transpose(error),error)
+        #sum_square_error = np.dot(np.transpose(error),error)
         #each validation error(MSE)
-        mse = sum_square_error/len(y_test)
+        #mse = sum_square_error/len(y_test)
         mse = mse + previous_mse
         previous_mse = mse
 
