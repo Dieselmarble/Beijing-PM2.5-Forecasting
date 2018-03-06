@@ -12,11 +12,10 @@ import numpy as np
 def split(data):
     #split data into training and test set
     #columns 0 - 80
-    X = data[:, 0:26]
+    X = data[:, 0:48]
     #PM25 to be predicted is on column 3
-    y = data[:,26]
-    
-    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2) 
+    y = data[:,48]
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.15) 
     return X_train, X_test, y_train, y_test
 
 if __name__ == '__main__':

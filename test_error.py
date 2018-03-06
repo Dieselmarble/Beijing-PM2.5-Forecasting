@@ -12,20 +12,28 @@ from sklearn.linear_model import ElasticNet
 from sklearn.linear_model import Lasso
 from sklearn.linear_model import Ridge
 
-def testing(X_train,y_train,X_test,y_test,name,a,l1,kernel_n):
+def testing(X_train,y_train,X_test,y_test,name,a,l1,C_,gamma_):
+    if name == 'Constant':
+        y_predict = round(np.mean(y_train))
+        e = y_test-y_predict
+        error = np.mean(np.square(e, e))
+        return error
+    
     if name == 'Ridge':
+        #If set to false, no intercept will be used in calculations
         clf = Ridge(alpha = a)
-    if name == 'Lasso':
+    elif name == 'Lasso':
         clf = Lasso(alpha = a)
-    if name =='elastic':
+    elif name =='elastic':
         clf = ElasticNet(alpha = a, l1_ratio = l1 ,random_state=0)
-    if name == 'SVM':
-        clf = SVR(C=1.0, epsilon=0.2, kernel=kernel_n )
+    elif name == 'SVM':
+        clf = SVR(C=C_, epsilon=0.1,gamma=gamma_, kernel='rbf' )
     clf.fit(X_train,y_train)
     y_predict = clf.predict(X_test)
     #y_predict = np.ravel(y_predict)
     error = mean_squared_error(y_test, y_predict)
     return error
 
+    
 if __name__ == '__main__':
-    testing(X_train,y_train,X_test,y_test,name,a,l1,kernel_n )
+    testing(X_train,y_train,X_test,y_test,name,a,l1,C_,gamma_ )
