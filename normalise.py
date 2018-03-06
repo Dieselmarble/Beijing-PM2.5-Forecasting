@@ -16,7 +16,7 @@ def normalise(train, test):
     #std =  train.std(axis = 0)
     mean = np.mean(train, axis = 0)
     std = np.std(train, axis = 0)
-    std = remove_zero(std)
+    #std = remove_zero(std)
     test_scaled = (test - mean)/std
     train_scaled = (train - mean)/std
     return train_scaled, test_scaled

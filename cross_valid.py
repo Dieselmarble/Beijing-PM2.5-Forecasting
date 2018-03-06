@@ -16,8 +16,9 @@ from sklearn.metrics import mean_squared_error
 
 
 def cross_valid(feature, y, name, a, l1, C_, gamma_):
-    kf = KFold(n_splits = 10, shuffle = False, random_state=None) 
+    kf = KFold(n_splits = 3, shuffle = False, random_state=None) 
     fold = 0
+    coef = 0
     X_train = []
     X_test = []
     y_train = []
@@ -35,7 +36,7 @@ def cross_valid(feature, y, name, a, l1, C_, gamma_):
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name == 'Lasso':
-            clf = Lasso(alpha = a)
+            clf = Lasso(alpha = a,fit_intercept=True,tol=0.01)
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name =='elastic':
@@ -43,8 +44,8 @@ def cross_valid(feature, y, name, a, l1, C_, gamma_):
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name == 'SVM':
-            clf = SVR(C=C_, gamma=gamma_, kernel='rbf' )
-            
+            clf = SVR(C=C_, gamma=gamma_, epsilon=0.1, kernel='poly' )
+            clf.fit(X_train,y_train)
         y_predict = clf.predict(X_test)   
         mse = mean_squared_error(y_test, y_predict)
         mse = mse + previous_mse

@@ -6,7 +6,6 @@ Created on Mon Feb 26 13:11:24 2018
 @author: kevin
 """
 import numpy as np
-from sklearn import preprocessing
 import matplotlib.pyplot as plt
 from data2matrix import data2matrix
 from cross_valid import cross_valid
@@ -17,6 +16,9 @@ from test_error import testing
 #import data from csv file to a matirx
 data = data2matrix()
 X_train, X_test, y_train, y_test = split(data)
+
+#y_train = y_train - np.mean(y_train)
+#y_test = y_test - np.mean(y_train)
 y_train = np.ravel(y_train)
 y_test = np.ravel(y_test)
 #nomalise test set with the mean and std from training set
@@ -26,13 +28,13 @@ coefs = []
 errors2 = []
 coefs2 = []
 mse = 0;
-
+'''
 #alphas = [ 1e-6, 1e-6, 1e-5, 1e-4, 1e-3, 1e-2, 0.1, 1, 10, 100]
-alphas = np.logspace(-4, 7, 250)
+alphas = np.logspace(-4, 7, 100)
 for a in alphas:
     #Cross validation splitter
     mse, coef = cross_valid\
-    (X_train_scaled, y_train, 'Ridge', a, 0.5,0,0)
+    (X_train_scaled, y_train, 'Ridge', a, 0.5,5,10)
     #mse = float(mse[0]) 
     errors.append(mse)
     coefs.append(coef)
@@ -48,8 +50,8 @@ opt_a = alphas[index]
  
 print('alpha value %d has lowest error of %d' %(opt_a, mini))
 '''
-C_range = np.linspace(1e-1, 1, 5)
-gamma_range = np.linspace(1e-1, 1, 5)
+C_range = np.logspace(-1, 10, 3)
+gamma_range = np.logspace(-1, 10, 3)
 e=[]
 for C in C_range:
     for gamma in gamma_range:
@@ -66,8 +68,7 @@ opt_c=e[i][0]
 opt_ga=e[i][1]
 print('C value %d, gamma value %d has lowest error of %d' \
       %(opt_c,opt_ga, mini))
-'''    
-
+'''
 #Plot error against alpha
 plt.subplot(121)
 ax = plt.gca()
@@ -89,11 +90,10 @@ plt.ylabel('weights')
 plt.title('coefficients versus the regularization')
 plt.axis('tight')
 plt.show()
+'''
+'''
+train_e, test_e = testing(X_train_scaled,y_train,X_test_scaled,y_test,\
+                          'SVM',opt_a, 0.5, 5,10)
 
-test_e = testing \
-(X_train_scaled,y_train,X_test_scaled,y_test,\
- 'SVM',1, 0.5, 0.1,0.1)
-
-#print('testing error is %d' %test_e)
-
-del i, index, mse
+print('training error is %d ;testing error is %d' %(train_e,test_e))
+'''

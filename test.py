@@ -21,7 +21,7 @@ df = df.drop(['day'], axis=1)
 df = df.drop(['Is'], axis = 1)
 df = df.drop(['Ir'], axis = 1)
 
-for i in range(1,8): # in range 1 - 7 
+for i in range(1,9): # in range 1 - 7 
 
     df['pm2.5_%d' %i] = df2['pm2.5'].shift(i)
     df['DEWP_%d' %i] = df2['DEWP'].shift(i)
@@ -42,7 +42,7 @@ N = len(data)
 #Wind direction is on column 8 
 
 for i in range (N):
-        for p in range(4,49,6):
+        for p in range(4,56,6):
             if data[i,p] == 'NE':
                 data[i,p] = 1
             elif data[i,p] == 'SE':
