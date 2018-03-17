@@ -16,8 +16,8 @@ def data2matrix():
     df = df.drop(['year'], axis=1)
     df = df.drop(['month'], axis = 1)
     df = df.drop(['day'], axis=1)
-    df = df.drop(['Is'], axis = 1)
-    df = df.drop(['Ir'], axis = 1)
+    #df = df.drop(['Is'], axis = 1)
+    #df = df.drop(['Ir'], axis = 1)
 
     for i in range(1,9): # in range 1 - 7 
 
@@ -26,7 +26,9 @@ def data2matrix():
         df['TEMP_%d' %i] = df2['TEMP'].shift(i)
         df['PRES_%d' %i] = df2['PRES'].shift(i)
         df['cbwd_%d' %i] = df2['cbwd'].shift(i)
-        df['Iws_%d' %i] = df2['Iws'].shift(i)    
+        df['Iws_%d' %i] = df2['Iws'].shift(i)
+        df['Is_%d' %i] = df2['Is'].shift(i)
+        df['Ir_%d' %i] = df2['Ir'].shift(i)
         
     df = df[df.hour ==8] 
     #shift tomorrow's pm2.5 data into today's row
@@ -38,7 +40,7 @@ def data2matrix():
     N = len(data)
     #Wind direction is on column 
     for i in range (N):
-            for p in range(4,56,6):
+            for p in range(4,73,8):
                 if data[i,p] == 'NE':
                     data[i,p] = 1
                 elif data[i,p] == 'SE':

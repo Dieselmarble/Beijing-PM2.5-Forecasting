@@ -8,12 +8,8 @@ Created on Wed Feb 28 20:31:15 2018
 
 from sklearn import preprocessing
 import numpy as np
-import math
-
 
 def normalise(train, test):
-    #mean = train.mean(axis = 0)
-    #std =  train.std(axis = 0)
     mean = np.mean(train, axis = 0)
     std = np.std(train, axis = 0)
     #std = remove_zero(std)
