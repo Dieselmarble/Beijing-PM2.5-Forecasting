@@ -19,7 +19,7 @@ def data2matrix():
     #df = df.drop(['Is'], axis = 1)
     #df = df.drop(['Ir'], axis = 1)
 
-    for i in range(1,9): # in range 1 - 7 
+    for i in range(1,9): 
 
         df['pm2.5_%d' %i] = df2['pm2.5'].shift(i)
         df['DEWP_%d' %i] = df2['DEWP'].shift(i)

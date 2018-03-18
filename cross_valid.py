@@ -16,14 +16,15 @@ from sklearn.metrics import mean_squared_error
 
 
 def cross_valid(feature, y, name, a, l1, C_, gamma_):
-    kf = KFold(n_splits = 3, shuffle = False, random_state=None) 
+    kf = KFold(n_splits = 5, shuffle = False, random_state=None) 
     fold = 0
     coef = 0
     X_train = []
     X_test = []
     y_train = []
     y_test = []
-    previous_mse = 0;
+    pcv_e = 0;
+    pt_e = 0;
     for train_idx, test_idx in kf.split(feature):  
         fold += 1
         X_train = feature[train_idx]
@@ -46,15 +47,20 @@ def cross_valid(feature, y, name, a, l1, C_, gamma_):
         if name == 'SVM':
             clf = SVR(C=C_, gamma=gamma_, epsilon=0.1, kernel='poly' )
             clf.fit(X_train,y_train)
-        y_predict = clf.predict(X_test)   
-        mse = mean_squared_error(y_test, y_predict)
-        mse = mse + previous_mse
-        previous_mse = mse
+        y_predict1 = clf.predict(X_test)   
+        y_predict2 = clf.predict(X_train) 
+        t_e = mean_squared_error(y_train, y_predict2)
+        t_e = t_e + pt_e
+        pt_e = t_e
+        cv_e = mean_squared_error(y_test, y_predict1)
+        cv_e = cv_e + pcv_e
+        pcv_e = cv_e
 
     #Then divided by number of folds getting Cross-validation error 
-    cv_error = mse/fold
+    cv_error = cv_e/fold
+    t_error = t_e/fold
 
-    return cv_error,coef
+    return cv_error,t_error,coef
     
 if __name__ == '__main__':
     cross_valid(feature, y, name, a, l1, C_, gamma_)
