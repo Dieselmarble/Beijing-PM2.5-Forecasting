@@ -16,7 +16,7 @@ from sklearn.metrics import mean_squared_error
 
 
 def cross_valid(feature, y, name, a, l1, C_, gamma_):
-    kf = KFold(n_splits = 5, shuffle = False, random_state=None) 
+    kf = KFold(n_splits = 5)
     fold = 0
     coef = 0
     X_train = []
@@ -37,7 +37,7 @@ def cross_valid(feature, y, name, a, l1, C_, gamma_):
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name == 'Lasso':
-            clf = Lasso(alpha = a,fit_intercept=True,tol=0.01)
+            clf = Lasso(alpha = a,fit_intercept=True,tol=0.01,max_iter=50000)
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name =='elastic':
@@ -45,7 +45,7 @@ def cross_valid(feature, y, name, a, l1, C_, gamma_):
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name == 'SVM':
-            clf = SVR(C=C_, gamma=gamma_, epsilon=0.1, kernel='poly' )
+            clf = SVR(C=C_, gamma=gamma_, epsilon=0.1, kernel='rbf' )
             clf.fit(X_train,y_train)
         y_predict1 = clf.predict(X_test)   
         y_predict2 = clf.predict(X_train) 
@@ -60,7 +60,7 @@ def cross_valid(feature, y, name, a, l1, C_, gamma_):
     cv_error = cv_e/fold
     t_error = t_e/fold
 
-    return cv_error,t_error,coef
+    return cv_error,t_error
     
 if __name__ == '__main__':
     cross_valid(feature, y, name, a, l1, C_, gamma_)

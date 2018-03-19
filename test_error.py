@@ -24,11 +24,11 @@ def testing(X_train,y_train,X_test,y_test,name,a,l1,C_,gamma_):
         clf = Ridge(alpha = a)
     elif name == 'Lasso':
         #clf = Lasso(alpha = a)
-        clf = Lasso(alpha = a,fit_intercept=True,tol=0.01)
+        clf = Lasso(alpha = a,fit_intercept=True,tol=0.01,max_iter=50000)
     elif name =='elastic':
         clf = ElasticNet(alpha = a, l1_ratio = l1)
     elif name == 'SVM':
-        clf = SVR(C=C_, epsilon=0.1,gamma=gamma_, kernel='poly' )
+        clf = SVR(C=C_, epsilon=0.1,gamma=gamma_, kernel='rbf' )
     clf.fit(X_train,y_train)
     y_predict = clf.predict(X_test)
     y_predict_train = clf.predict(X_train)
