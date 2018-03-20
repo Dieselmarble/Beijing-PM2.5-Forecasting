@@ -15,7 +15,7 @@ from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error
 
 
-def cross_valid(feature, y, name, a, l1, C_, gamma_):
+def cross_valid(feature, y, name, a, l1, C_, ep_):
     kf = KFold(n_splits = 5)
     fold = 0
     coef = 0
@@ -31,7 +31,6 @@ def cross_valid(feature, y, name, a, l1, C_, gamma_):
         y_train = y[train_idx]
         X_test = feature[test_idx]
         y_test = y[test_idx]
-
         if name == 'Ridge':
             clf = Ridge(alpha = a)
             clf.fit(X_train,y_train)
@@ -45,7 +44,7 @@ def cross_valid(feature, y, name, a, l1, C_, gamma_):
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name == 'SVM':
-            clf = SVR(C=C_, gamma=gamma_, epsilon=0.1, kernel='rbf' )
+            clf = SVR(C=C_, epsilon=ep_, kernel='poly',degree=1 )
             clf.fit(X_train,y_train)
         y_predict1 = clf.predict(X_test)   
         y_predict2 = clf.predict(X_train) 
@@ -60,8 +59,8 @@ def cross_valid(feature, y, name, a, l1, C_, gamma_):
     cv_error = cv_e/fold
     t_error = t_e/fold
 
-    return cv_error,t_error
+    return cv_error,t_error, coef
     
 if __name__ == '__main__':
-    cross_valid(feature, y, name, a, l1, C_, gamma_)
+    cross_valid(feature, y, name, a, l1, C_, ep_)
     

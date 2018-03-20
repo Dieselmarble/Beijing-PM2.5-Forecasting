@@ -12,7 +12,7 @@ from sklearn.linear_model import ElasticNet
 from sklearn.linear_model import Lasso
 from sklearn.linear_model import Ridge
 
-def testing(X_train,y_train,X_test,y_test,name,a,l1,C_,gamma_):
+def testing(X_train,y_train,X_test,y_test,name,a,l1,C_,ep_):
     if name == 'Constant':
         y_predict = round(np.mean(y_train))
         e = y_test-y_predict
@@ -28,7 +28,7 @@ def testing(X_train,y_train,X_test,y_test,name,a,l1,C_,gamma_):
     elif name =='elastic':
         clf = ElasticNet(alpha = a, l1_ratio = l1)
     elif name == 'SVM':
-        clf = SVR(C=C_, epsilon=0.1,gamma=gamma_, kernel='rbf' )
+        clf = SVR(C=C_, epsilon=ep_, kernel='poly',degree=1 )
     clf.fit(X_train,y_train)
     y_predict = clf.predict(X_test)
     y_predict_train = clf.predict(X_train)
@@ -39,4 +39,4 @@ def testing(X_train,y_train,X_test,y_test,name,a,l1,C_,gamma_):
 
     
 if __name__ == '__main__':
-    testing(X_train,y_train,X_test,y_test,name,a,l1,C_,gamma_ )
+    testing(X_train,y_train,X_test,y_test,name,a,l1,C_,ep_)
