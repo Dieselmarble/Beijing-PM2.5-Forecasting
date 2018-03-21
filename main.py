@@ -19,7 +19,7 @@ def linear_method():
     errors = []
     coefs = []
     train_e=[]
-    alphas = np.logspace(-8, 8, 100)
+    alphas = np.logspace(-4, 4, 100)
     for a in alphas:
         #Cross validation splitter
         mse, te, coef = cross_valid\
@@ -62,8 +62,8 @@ def linear_method():
     print('training error is %d ;testing error is %d' %(train_e,test_e))
 
 def nlinear_method():    
-    C_range = np.logspace(-2, 2, 5)
-    ep_range = np.logspace(-2, 2, 5)
+    C_range = np.logspace(-1, 2, 10)
+    ep_range = np.logspace(-2, 1, 10)
     errors=[]
     parc=[]
     parep=[]
@@ -81,7 +81,7 @@ def nlinear_method():
             errors.append(mse)
             parc.append(C)
             parep.append(ep)
-            print('almost done %d' %j)
+            print('hello')
             j+=1
         j=0    
         i+=1
@@ -94,10 +94,10 @@ def nlinear_method():
     opt_ep = parep[index]
     print('C value %d, epsilon value %d has lowest error of %d' \
           %(opt_c,opt_ep, mini))
-    
+    print (opt_ep)
     # Plot the surface
     plt.imshow(e_mesh, interpolation='nearest', cmap=plt.cm.hot)
-    plt.xlabel('epsilon')
+    plt.xlabel('gamma')
     plt.ylabel('C')
     plt.colorbar()
     plt.xticks(np.arange(len(ep_range)), ep_range, rotation=45)
@@ -106,7 +106,7 @@ def nlinear_method():
     plt.show()
     
     plt.imshow(t_mesh, interpolation='nearest', cmap=plt.cm.hot)
-    plt.xlabel('epsilon')
+    plt.xlabel('gamma')
     plt.ylabel('C')
     plt.colorbar()
     plt.xticks(np.arange(len(ep_range)), ep_range, rotation=45)
@@ -133,5 +133,9 @@ if __name__ == '__main__':
     y_test = np.ravel(y_test)
     #nomalise test set with the mean and std from training set
     X_train_scaled, X_test_scaled = normalise(X_train, X_test)
+    #Model = 'Ridge'
+    #linear_method()
+    #Model = 'Lasso'
+    #linear_method()
     Model = 'SVM'
     nlinear_method()

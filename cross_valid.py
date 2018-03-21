@@ -36,7 +36,7 @@ def cross_valid(feature, y, name, a, l1, C_, ep_):
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name == 'Lasso':
-            clf = Lasso(alpha = a,fit_intercept=True,tol=0.01,max_iter=50000)
+            clf = Lasso(alpha = a,fit_intercept=True,tol=0.1,max_iter=50000)
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name =='elastic':
@@ -44,7 +44,7 @@ def cross_valid(feature, y, name, a, l1, C_, ep_):
             clf.fit(X_train,y_train)
             coef = clf.coef_
         if name == 'SVM':
-            clf = SVR(C=C_, epsilon=ep_, kernel='poly',degree=1 )
+            clf = SVR(C=C_, gamma=ep_,epsilon=0.01, kernel='poly',degree=3,tol=1e-2)
             clf.fit(X_train,y_train)
         y_predict1 = clf.predict(X_test)   
         y_predict2 = clf.predict(X_train) 
