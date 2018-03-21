@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 
 def data2matrix():
-    df2 = pd.read_csv('PRSA_data.csv')#.as_matrix()
+    df2 = pd.read_csv('./data/PRSA_data_2010.1.1-2014.12.31.csv')
     df = df2.copy()    
     #remove indexing in features 
     df = df.drop(['No'], axis=1)
@@ -58,7 +58,6 @@ if __name__ == '__main__':
     data2matrix()
     
 
-#csv = np. genfromtxt('PRSA_data.csv',dtype=float, delimiter=",")
 
 
 
