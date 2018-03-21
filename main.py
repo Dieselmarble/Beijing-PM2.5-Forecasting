@@ -133,9 +133,9 @@ if __name__ == '__main__':
     y_test = np.ravel(y_test)
     #nomalise test set with the mean and std from training set
     X_train_scaled, X_test_scaled = normalise(X_train, X_test)
-    #Model = 'Ridge'
-    #linear_method()
-    #Model = 'Lasso'
-    #linear_method()
+    Model = 'Ridge'
+    linear_method()
+    Model = 'Lasso'
+    linear_method()
     Model = 'SVM'
     nlinear_method()
