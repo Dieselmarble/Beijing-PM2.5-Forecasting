@@ -1,0 +1,177 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\fonttbl\f0\fswiss\fcharset0 Helvetica;}
+{\colortbl;\red255\green255\blue255;}
+{\*\expandedcolortbl;;}
+\paperw11900\paperh16840\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\pard\tx720\tx1440\tx2160\tx2880\tx3600\tx4320\tx5040\tx5760\tx6480\tx7200\tx7920\tx8640\pardirnatural\partightenfactor0
+
+\f0\fs24 \cf0 \\documentclass[10pt,twocolumn,letterpaper]\{article\}\
+\\usepackage\{cvpr\}\
+\\usepackage\{times\}\
+\\usepackage\{epsfig\}\
+\\usepackage\{graphicx\}\
+\\usepackage\{amsmath\}\
+\\usepackage\{amssymb\}\
+\\usepackage[breaklinks=true,bookmarks=false]\{hyperref\}\
+\\graphicspath\{ \{pics/\} \}\
+\\cvprfinalcopy \
+\\def\\cvprPaperID\{****\} \
+\\def\\httilde\{\\mbox\{\\tt\\raisebox\{-.5ex\}\{\\symbol\{126\}\}\}\}\
+\\setcounter\{page\}\{1\}\
+\\begin\{document\}\
+\\title\{EE3-23 Introduction to Machine Learning Coursework\}\
+\\author\{Zhongxuan Li\\\\\
+CID: 01050018\\\\\
+\}\
+\\maketitle\
+\\section*\{Plagiarism Pledge\}\
+I, Zhongxuan Li, pledge that this assignment is completely my own work, and that I did not take,\
+borrow or steal work from any other person, and that I did not allow any other person to use, have, borrow\
+or steal portions of my work. I understand that if I violate this honesty pledge, I am subject to disciplinary\
+action pursuant to the appropriate sections of Imperial College London.\
+\
+\\section\{Introduation\}\
+In this coursework, standard machine learning methodology is applied to solve regression problem in the Beijing PM2.5 prediction. This report consists of dataset processing, discussion of loss function, comparison between distinct models, parameter tuning and conclusions. All the code is written is Python, and results are obtained all in once.\
+\
+\\section\{Curating on the Dataset\}\
+The question requires prediction of any day's PM2.5 at 8 am based on data available until 8 am of the previous day. According to the specification, the following adjustment on the dataset is performed before the $csv.$ file is converted into a numpy matrix.\
+\\begin\{itemize\}\
+\\item On each row, append accumulated meteorology data from past 8 hours. In this way, we expand the feature matrix dimension by 8.\
+\\item Delete all rows that are not recorded at 8 am. Because we don not aim to predict PM2.5 at other time.\
+\\item Remove all columns related to time, including 'index', 'year','month','day', and 'hours'. As they are not considered as features that influence PM2.5 on 8 am.\
+\\item Create a new column which includes 'PM2.5' of next day at 8 am. Thus today's features correspond to appropriate target from tomorrow. \
+\\end\{itemize\}\
+Hence, we obtain a data matrix of dimension $1651\\times73$. After extracting the last column out as target matrix, the remaining matrix forms feature matrix.\
+\
+\\section\{Training \\& Test set Splitting and Standardisation\}\
+We split either feature and target data matrix into two sets with ratio 0.15, obtaining 4 distinct sets called $\\mathbf\{X\}_\{train\},\\mathbf\{Y\}_\{train\}, \\mathbf\{X\}_\{test\}, \\mathbf\{Y\}_\{test\}$. Standardise every column in $\\mathbf\{X\}_\{train\}$ with formula,\
+\\begin\{equation\}\
+x'_\{train\} = \\frac\{x_\{train\} - E(x_\{train\})\}\{\\sigma_\{x_\{train\}\}\}\
+\\end\{equation\}\
+so as every column in $\\mathbf\{X\}_\{test\}$ with formula,\
+\\begin\{equation\}\
+x'_\{test\} = \\frac\{x_\{test\} - E(x_\{train\})\}\{\\sigma_\{x_\{train\}\}\}\
+\\end\{equation\}\
+where $E(x_\{train\})$ is mean of a single column vector of $\\mathbf\{X\}_\{train\}$ whereas $\\sigma_\{x_\{train\}\}$ is standard deviation of a single column vector of $\\mathbf\{X\}_\{train\}$.\
+\
+\\section\{Loss Function\}\
+In linear regression model, we exam the deviation from correct targets. Therefore an error above the target causes the same loss as the same magnitude of error below the target. If the target is t, then a quadratic loss function is\
+\\begin\{equation\}\
+L(y,f(x,w)) = (y-f(x,w))^2\
+\\end\{equation\}\
+However in soft-margin SVM we used later on, the input is first mapped onto a m-dimensional feature space using kernel trick, and then a linear model is constructed in this feature space. we ignores errors that are within $\\epsilon$ distance of the observed value by treating them as equal to zero and penalty outliers excluded from the $\\epsilon$ tube\\cite\{loss\}. The loss is measured based on the distance between observed value y and the \uc0\u949  boundary. This is formally described by the linear \u949 -insensitive loss function.\
+\\begin\{equation\}\
+L_\{\\epsilon\}(y,f(x,w))=\
+\\begin\{cases\}\
+0 &\\text\{if \} |y-f(x,w)| \\leq \\epsilon  \\\\\
+|y-f(x,w)|-\\epsilon &otherwise\
+\\end\{cases\}\
+\\label\{eq4\}\
+\\end\{equation\}\
+\\section\{Base line: Linear Regression\}\
+Use $\\mathbf\{X\}_\{train\}$ and $\\mathbf\{Y_\{train\}\}$ to train the linear regression model and test the model on the test set. The training error is 5453 and testing error is 4559. This is our base line and no advanced algorithm should perform under this baseline. \
+\
+\\section\{Ridge and Lasso Regression\}\
+Ridge regression prevent the model from overfitting by using L2 regularisation, introducing a model complexity penalty term, $\\alpha||\\omega||^2$.  Use 5-fold cross-validation to select optimal penalty factor out of the range $\\alpha \\subset [10^\{-4\} - 10^\{4\}]$. Model performance is accessed by cross-validation error, which is defined as\
+\\begin\{equation\}\
+E(L(y,f(x,w,\\lambda))/N)\
+\\end\{equation\}\
+where $N$ is size of the validation set. \
+Plot the cross-validation(CV) error and training error over different $\\alpha$ values on a log base.\
+\\begin\{figure\}[h]\
+\\includegraphics[width=0.9\\linewidth]\{ridge.png\}\
+\\caption\{Ridge training and CV error as a function of $\\alpha$\}\
+\\label\{p1\}\
+\\end\{figure\}\
+%training error is 5584 ;testing error is 4541\
+%alpha value 16 has lowest error of 5981\
+In figure \\ref\{p1\}, training error rises monotonically with increasing regularisation while CV error has a convex shape. This is because when $\\alpha$ is small then $||w||^2$ values are large and we tend to overfit the data set. Hence the training error will be low but the cross validation error will be high. However when $\\alpha$ is large then the values of $||\\omega||^2$ become negligible almost leading to a polynomial degree of 1. These will underfit the data and result in a high training error and a cross validation error. Hence the chosen value of $\\alpha$ should be such that the cross validation error is the lowest. A global minima occurs at $\\alpha = 16, MSE = 5991$. We use this $\\alpha$ as our optima parameter, getting overall training error is 5584 and testing error is 4541.\
+\
+Lasso regression differs from ridge by using L1 norm, which allow sparse solution that can be used for feature selection. From figure \\ref\{p2\}, Lasso has similar error plot as Ridge regression. $\\alpha$ value 1 has lowest error of 6017, overall training error is 5885 and testing error is 4528.\
+\\begin\{figure\}[h]\
+\\includegraphics[width=0.9\\linewidth]\{lasso.png\}\
+\\caption\{Lasso training and CV error as a function of $\\alpha$\}\
+\\label\{p2\}\
+\\end\{figure\}\
+\
+It is worthwhile to notice that Ridge and Lasso coefficients converges at different rate. Under Ridge regression, $\\omega$ converges to zero as an exponential while under Lasso regression, due to sparse solutions, some $\\omega$ drops to zero rapidly whereas some retain at a certain level. This fact proved Lasso has done feature selection successfully. \
+\
+The validity of feature selection makes Lasso performs better than ridge. However Lasso has its own drawback which is \
+\\begin\{figure\}[h]\
+\\includegraphics[width=0.9\\linewidth]\{ridge2.png\}\
+\\includegraphics[width=0.9\\linewidth]\{lasso2.png\}\
+\\caption\{$\\omega$ as a function of $\\alpha$\}\
+\\label\{p3\}\
+\\end\{figure\}\
+\
+\\section\{Advanced Method: Support Vector machine\}\
+SVM regression performs linear regression in the high-dimension feature space using $\\epsilon$ insensitive loss (equation\\ref\{eq4\}). Meanwhile soft-margin SVM allows some violations by introducing slack variables $\\xi$. Hence we arrive at minimizing\
+\\begin\{equation\}\
+||\\omega||^2 + C\\sum_\{i=1\}^\{N\} \\xi\
+\\label\{eqsvm\}\
+\\end\{equation\}\
+subject to \
+\\begin\{equation*\}\
+\\begin\{cases\}\
+|y_i-f(x_i,w)|-\\epsilon \\leq \\xi_i\\\\\
+\\xi_i \\geq 0\
+\\end\{cases\}\
+\\end\{equation*\}\
+Parameter C determines the trade off between the model complexity and the degree to which deviations larger than the $\\epsilon$ tube are tolerated in optimization formulation \\ref\{eqsvm\}. For example, if C is too large (infinity), then the objective is to minimize training error only by regulating $\\xi$ as small as possible, without regard to model complexity part $||w||^2$, and overfitting may occurs with high variance.\
+If C is small, then the model has a very relaxed slack variable leading to underfitting or high bias in terms of bias-variance analysis.\
+\
+Use cross-validation to tune optimal $C$ and $\\epsilon$ with RBF (gaussian) kernel. Then plot both errors as heatmap.\
+\\begin\{figure\}[h]\
+\\includegraphics[width=0.9\\linewidth]\{rbf1.png\}\
+\\includegraphics[width=0.9\\linewidth]\{rbf2.png\}\
+\\caption\{Lasso training and CV error as a function of $\\alpha$\}\
+\\label\{p4\}\
+\\end\{figure\}\
+\
+As shown in the figure \\ref\{p4\}, C value 61, epsilon value 37 has lowest CV error of 6157, final training error is 5196 and testing error is 4560. It is obvious that we have obtained a wide $\\epsilon$ tube implies that there is considerable high level of noise in the dataset. The model may not be able to find an appropriate regression polynomial, instead it tries to tolerance many points lies with in the epsilon tube and regulate the slack variable $\\xi$ as small as possible. In general, we have a moderate low complex model with very wide tolerance range. And it does not excel the performance of linear methods.\
+\
+Another solution has been proposed that instead of searching for optimal $\\epsilon$, we find optimal $\\gamma$ brutally again, by cross validation in the radial basis function.\
+\\begin\{equation\}\
+K (\\mathbf \{x\} ,\\mathbf \{x'\} )=\\exp \\left(-\{\\frac \{\\|\\mathbf \{x\} -\\mathbf \{x'\} \\|^\{2\}\}\{2\\sigma ^\{2\}\}\}\\right) = exp(- \\gamma \\|\\mathbf \{x\} -\\mathbf \{x'\} \\|^\{2\})\
+\\label\{e3\}\
+\\end\{equation\}\
+From equation \\ref\{e3\}, a low gamma causes high variance ($\\sigma^2$), implies we have a wide gaussian distribution. If gamma is large, then variance is small implying the support vector does not have wide-spread influence, but high bias instead.\
+\
+Again do cross validation of C and $\\gamma$ with $\\epsilon$ fixed at 0.01. In figure \\ref\{p5\}, C value 16, gamma value 0.01 has lowest error of 6323. Final training error is 5822 and testing error is 4581.\
+\\begin\{figure\}[h]\
+\\includegraphics[width=0.9\\linewidth]\{gamma1.png\}\
+\\caption\{Lasso training and CV error as a function of $\\alpha$\}\
+\\label\{p5\}\
+\\end\{figure\}\
+\
+We are at extreme condition that having gamma goes to 0. Because of the nature of wide gaussian distribution, the region of influence of any selected support vector would include the whole training set even if the the Euclidean distance between them is large. Under this scenario all points are considered, and we are losing the benifits of SVM. \\cite\{SVM\} \
+\
+\\section\{Proposed Solution\}\
+\\begin\{table\}[h]\
+\\begin\{center\}\
+\\begin\{tabular\}\{|l|c|c|c|c|\}\
+\\hline\
+Method & CV error & Training error & Test error \\\\\
+\\hline\\hline  \
+Linear Regression & NA & 5453 & 4559 \\\\\
+Ridge Regression & 5991 &  5584 & 4541 \\\\\
+Lasso Regression & 6017 & 5885 & 4528\\\\\
+SVM & 6157 & 5196 & 4560\\\\\
+\\hline\
+\\end\{tabular\}\
+\\end\{center\}\
+\\caption\{Comparison between different methods.\}\
+\\label\{t1\}\
+\\end\{table\}\
+\
+In table \\ref\{t1\} all 4 algorithms has close performance. My proposed solution would be Lasso regression. Despite the fact that Lasso's test error is lower, the feature dataset has relative large dimension, and indeed some of them are uncorrelated to the target. Therefore, feature selection becomes highly necessary. \
+\
+\
+\\section\{Conclusion\}\
+\{\\small\
+\\bibliographystyle\{ieee\}\
+\\bibliography\{egbib\}\
+\}\
+\\end\{document\}\
+\
+}
