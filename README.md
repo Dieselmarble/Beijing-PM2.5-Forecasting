@@ -6,4 +6,4 @@ Several classic statistic and machine learning methods(Ridge/Lasso Regression, G
 
 Dataset used:
 
-[UCI ML Dataset]]( https://archive.ics.uci.edu/ml/datasets/Beijing+PM2.5+Data)
+[UCI ML Dataset](https://archive.ics.uci.edu/ml/datasets/Beijing+PM2.5+Data)
