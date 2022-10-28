@@ -1,4 +1,4 @@
-### Introduction to Machine learning Coursework, Imperial College EEE London 2018
+### Introduction to Machine learning Coursework, Imperial College London EEE 2018
 
 Predict next day's PM2.5 pollution based on today's meteorology data.
 
